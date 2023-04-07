@@ -4,6 +4,7 @@ require(haven)
 library(tidyverse)
 library(caret)
 library(parallel)
+library(doParallel)
 library(tictoc)
 
 ## Setting seed for reproducibility
@@ -121,14 +122,20 @@ registerDoSEQ()
 
 
 
-# Publication
+# Publication- NEED TO ADD STUFF 
 
-## Creating table2_tbl
-### 1. Contains four rows corresponding to the four algorithms.
-### 2. Contains two columns called original and parallelized.
-### 3. Contains data summarizing the number of seconds required to execute each of the eight versions of this ML approach on your computer.
+## Answers to Questions:
+### 1. Which models benefited most from parallelization and why?
+#### Based on my computation of percentage change in run-time, xgbTree 
+#### benefited most from parallelization, followed by elastic net. This is 
+#### likely because [BLAH BLAH BLAH]
 
+### 2. How big was the difference between the fastest and slowest parallelized model? Why?
+#### The fastest model was glmnet at 1.86s and the slowest model was 
+#### random forest at 32.98s, their difference difference is 31.12s. This is 
+#### likely because ????
 
+### 3. If your supervisor asked you to pick a model for use in a production model, which would you recommend and why? Consider both Table 1 and Table 2 when providing an answer.
 
 results = function(train_mod){
   algo = train_mod$method
@@ -138,7 +145,33 @@ results = function(train_mod){
   return(c("algo" = algo, "cv_rsq" = cv_rsq, "ho_sq" = ho_rsq))
 }
 
-table1_tbl = as_tibble(t(sapply(mod_ls, results)))
+table1_tbl = as_tibble(t(sapply(mod_ls, results))) # NEED TO FIGURE OUT IF USING ORIGINAL OR NEW MODEL LIST
 
+## New tibble with training time for all eight models 
+table2_tbl = tibble(algorithm = mod_vec,
+                    original = original_time,
+                    parallelized = parallel_time)
+
+### Outuput from table2_tbl
+# algorithm original parallelized
+# 1        lm    2.930        2.883
+# 2    glmnet    5.991        1.857
+# 3    ranger   36.737       32.978
+# 4   xgbTree  128.934       28.810
+
+
+## Q1: Compare run-time across models by calculating percentage change in run time 
+table2_tbl %>% group_by(algorithm) %>% 
+  summarize(reduction = ((parallelized-original)/original) * 100)
+
+### Percentage change in run time 
+# algorithm reduction
+# 1 glmnet       -69.0 
+# 2 lm            -1.60
+# 3 ranger       -10.2 
+# 4 xgbTree      -77.7 
+
+## Q2: Difference between fastest and slowest parallelized model
+diff(range(table2_tbl$parallelized)) # 31.121s between random forest and glmnet
 
 
