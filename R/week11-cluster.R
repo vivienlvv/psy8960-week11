@@ -1,5 +1,4 @@
 # Script Settings and Resources
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 require(haven)
 library(tidyverse)
 library(caret)
@@ -20,15 +19,6 @@ gss_tbl = read_sav("../data/GSS2016.sav") %>%
   select(where(function(x) (sum(is.na(x))/nrow(.)) < 0.75))
 
 mod_vec = c("lm", "glmnet", "ranger", "xgbTree")
-
-
-
-
-# Visualization
-gss_tbl %>% ggplot(aes(x = workhours)) + 
-  geom_histogram(bins = 50) + 
-  labs(x = "workhours", y = "Frequency",
-       title = "Univariate distribution of workhours")
 
 
 
@@ -77,7 +67,10 @@ for(i in 1:length(mod_vec)){
   
 }
 
-local_cluster = makeCluster(detectCores() - 1) 
+## amdsmall partition has 128 cores available per node and each job 
+## has a maximum of 1 node. I will double the # of cores used in MSI to avoid
+## taking up too much resources and long
+local_cluster = makeCluster(14)   
 registerDoParallel(local_cluster)
 
 for(i in 1:length(mod_vec)){
@@ -123,8 +116,13 @@ results = function(train_mod){
   return(c("algo" = algo, "cv_rsq" = cv_rsq, "ho_sq" = ho_rsq))
 }
 
-table1_tbl = as_tibble(t(sapply(mod_ls, results))) 
+table1_tbl = as_tibble(t(sapply(mod_ls_original, results))) 
 
 table2_tbl = tibble(algorithm = mod_vec,
-                    original = original_time,
-                    parallelized = parallel_time)
+                    supercomputer = original_time,
+                    "supercomputer-14" = parallel_time)
+
+## Saving tables as Tables 3 and 4 
+write_csv(table1_tbl, "../out/table3.csv")
+write_csv(table2_tbl, "../out/table4.csv")
+

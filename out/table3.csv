@@ -1,0 +1,5 @@
+algo,cv_rsq,ho_sq
+lm,.16,.04
+glmnet,.86,.55
+ranger,.93,.55
+xgbTree,.96,.58
