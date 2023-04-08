@@ -107,6 +107,53 @@ registerDoSEQ()
 
 
 # Publication
+## 1. Which models benefited most from moving to the supercomputer and why?
+### When looking at the % reduction in training time for parallel vs sequential 
+### processing, random forest benefited the most moving from local laptop to 
+### MSI supercomputer in that its training time reduced by 33% on MSI compared to
+### no negligible change on my local laptop when parallelization is turned on. 
+### This is likely because the supercomputer used allows double the number of 
+### cores needed for more efficient parallel processing for random forest. 
+### Similarly, training time reduced by 90% and 78% for XGboost and elastic 
+### net with parallelization on MSI compared to only 78% and 70% on my local laptop.  
+
+### However, when just looking at the raw seconds taken to train the models,
+### moving to supercomputing doesn't seem to make a huge difference compared to my 
+### local device, especially when parallelization is not enabled. 
+
+
+## 2. What is the relationship between time and the number of cores used?
+### By comparing tables 2 and 4, I observed that when parallel processing is used, 
+### increasing the number of cores (from 7 to 14) generally reduced the number 
+### of seconds needed to train all four models compared to without paralllelization. 
+
+# NEED TO DOUBLE CHECK THIS (IT'S KINDA WEIRD IMO)
+## 3. If your supervisor asked you to pick a model for use in a production model, would you recommend using the supercomputer and why? Consider all four tables when providing an answer.
+### Taking all tables into consideration, I will likely not recommend using 
+### the supercomputer not because of performance but because of it minimal 
+### improvement in raw model training time. Based on tables 1 & 3, it is observed
+### that model performance from my local desktop and MSI did not vary by much.
+### Both tables 1 & 3 agree with each other than XGBoost should be chosen because 
+### it has greatest R-Squared values from both cross-validation and holdout test validation. 
+### Based on tables 2 & 4, although there is overall a greater % reduction in 
+### training time for parallelization vs. no parallelization when supercomputer
+### is used as opposed to a local desktop like mine, the raw training times (in s)
+### taken did not show great improvement. Take the fastest and slowest training 
+### models as an example , without parallelization, it took the supercomputer 
+### close to 9s to train OLS and 220s to train XGBoost, only took my local 
+### computer about 3s to train OLS and 128s to train XGBoost.
+### Indeed, the raw training time in seconds improved slightly for random forest
+### and XGBoost such that training time for random forest decreased from 35s to 33s
+### and that for XGBoost decreased from 28s to 22s. This decrease, in my opinion, 
+### is quite minimal. 
+### Taken together, for this given problem, supercomputer doesn't seem to yield
+### better performance (there isn't a reason to believe it would anyway!), 
+### its raw training time is not significantly faster, and the additional steps 
+### needed to work with shell and allocate the right amount of resources, I 
+### would not recommend using a supercomputer for this specific problem!
+
+
+
 
 results = function(train_mod){
   algo = train_mod$method
