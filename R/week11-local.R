@@ -83,8 +83,9 @@ for(i in 1:length(mod_vec)){
 
 ## 2. [Parallel] Training the other four models with parallelization
 
-### Turning on parallel processing 
-local_cluster = makeCluster(detectCores() - 1) # Using # of cores minus 1 for cluster  
+### Turning on parallel processing
+#### Using # of cores minus 1 for cluster to allow other processes on computer
+local_cluster = makeCluster(detectCores() - 1)   
 registerDoParallel(local_cluster)
 
 for(i in 1:length(mod_vec)){
@@ -121,20 +122,34 @@ registerDoSEQ()
 
 
 
-# Publication- NEED TO ADD STUFF 
+# Publication
 
 ## Answers to Questions:
 ### 1. Which models benefited most from parallelization and why?
 #### Based on my computation of percentage change in run-time, xgbTree 
-#### benefited most from parallelization, followed by elastic net. This is 
-#### likely because [BLAH BLAH BLAH]
+#### benefited most from parallelization (78% reduction), followed by elastic 
+#### net (69% reduction). This is likely because [BLAH BLAH BLAH]
 
 ### 2. How big was the difference between the fastest and slowest parallelized model? Why?
 #### The fastest model was glmnet at 1.86s and the slowest model was 
 #### random forest at 32.98s, their difference difference is 31.12s. This is 
-#### likely because ????
+#### likely because there are more dependency in computations for random forests
+#### compared to elastic net. For elastic net, all models could theoretically be 
+#### trained and predictions can be computed in parallel at the same time. 
+#### Whereas for random forest, the predictions at the end will be computed 
+#### based on individual trees (a dependency), making parallelization not 
+#### possible at some point of the model training process. Therefore, 
+#### training random forest took a lot more time than elastic net even though
+#### parallelization still improved model training time for random forest by a little.  
 
 ### 3. If your supervisor asked you to pick a model for use in a production model, which would you recommend and why? Consider both Table 1 and Table 2 when providing an answer.
+#### For this specific problem, I would recommend XGBoost. Based on Table 1, 
+#### xgboost had the highest R-squared values from both 10-fold cross-validation
+#### and holdout test validation. The computation time for XGBoost is also 
+#### mangeable based on Table 2 where the model training time for XGBoost 
+#### is about 130s on my local laptop and 30s with parallelization. 
+
+
 
 results = function(train_mod){
   algo = train_mod$method
@@ -144,7 +159,13 @@ results = function(train_mod){
   return(c("algo" = algo, "cv_rsq" = cv_rsq, "ho_sq" = ho_rsq))
 }
 
-table1_tbl = as_tibble(t(sapply(mod_ls, results))) # NEED TO FIGURE OUT IF USING ORIGINAL OR NEW MODEL LIST
+table1_tbl = as_tibble(t(sapply(mod_ls_original, results))) 
+### Output from table1_tbl 
+# algo    cv_rsq ho_sq
+# 1 lm      .16    .04  
+# 2 glmnet  .86    .55  
+# 3 ranger  .93    .57  
+# 4 xgbTree .95    .65 
 
 ## New tibble with training time for all eight models 
 table2_tbl = tibble(algorithm = mod_vec,
@@ -172,5 +193,3 @@ table2_tbl %>% group_by(algorithm) %>%
 
 ## Q2: Difference between fastest and slowest parallelized model
 diff(range(table2_tbl$parallelized)) # 31.121s between random forest and glmnet
-
-
