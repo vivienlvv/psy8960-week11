@@ -15,7 +15,7 @@ gss_tbl = read_sav("../data/GSS2016.sav") %>%
   mutate(across(everything(), as.numeric)) %>% 
   drop_na(MOSTHRS) %>% 
   rename(workhours = MOSTHRS) %>% 
-  select(-HRS1, HRS2) %>%
+  select(-HRS1, -HRS2) %>%
   select(where(function(x) (sum(is.na(x))/nrow(.)) < 0.75))
 
 mod_vec = c("lm", "glmnet", "ranger", "xgbTree")

@@ -175,7 +175,7 @@ table2_tbl = tibble(algorithm = mod_vec,
 ### Outuput from table2_tbl for later comparison
 # algorithm original parallelized
 # <chr>        <dbl>        <dbl>
-#   1 lm            3.28         3.04
+# 1 lm            3.28         3.04
 # 2 glmnet        5.95         1.91
 # 3 ranger       37.8         34.6 
 # 4 xgbTree     129.          28.0 
