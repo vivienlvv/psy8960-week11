@@ -110,12 +110,12 @@ registerDoSEQ()
 ## 1. Which models benefited most from moving to the supercomputer and why?
 ### When looking at the % reduction in training time for parallel vs sequential 
 ### processing, random forest benefited the most moving from local laptop to 
-### MSI supercomputer in that its training time reduced by 33% on MSI compared to
+### MSI supercomputer in that its training time reduced by 32% on MSI compared to
 ### no negligible change on my local laptop when parallelization is turned on. 
 ### This is likely because the supercomputer used allows double the number of 
 ### cores needed for more efficient parallel processing for random forest. 
-### Similarly, training time reduced by 90% and 78% for XGboost and elastic 
-### net with parallelization on MSI compared to only 78% and 70% on my local laptop.  
+### Similarly, training time reduced by 91% and 82% for XGboost and elastic 
+### net with parallelization on MSI compared to only 78% and 68% on my local laptop.  
 ### However, when just looking at the raw seconds taken to train the models,
 ### moving to supercomputing doesn't seem to make a huge difference compared to my 
 ### local laptop, especially when parallelization is not enabled. 
@@ -124,7 +124,8 @@ registerDoSEQ()
 ## 2. What is the relationship between time and the number of cores used?
 ### By comparing tables 2 and 4, I observed that when parallel processing is used, 
 ### increasing the number of cores (from 7 to 14) generally reduced the number 
-### of seconds needed to train all four models. 
+### of seconds needed to train more complex models like random forest and 
+### XGboost but more time needed to train linear models (OLS & elastic net). 
 
 
 ## 3. If your supervisor asked you to pick a model for use in a production model, would you recommend using the supercomputer and why? Consider all four tables when providing an answer.
