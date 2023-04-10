@@ -147,7 +147,7 @@ registerDoSEQ()
 #### xgboost had the highest R-squared values from both 10-fold cross-validation
 #### and holdout test validation. The computation time for XGBoost is also 
 #### mangeable based on Table 2 where the model training time for XGBoost 
-#### is about 130s on my local laptop and 30s with parallelization. 
+#### is about 130s without parallelization and 30s with parallelization on my local laptop. 
 
 
 
@@ -160,7 +160,7 @@ results = function(train_mod){
 }
 
 table1_tbl = as_tibble(t(sapply(mod_ls_original, results))) 
-### Output from table1_tbl 
+### Output from table1_tbl for later comparison
 # algo    cv_rsq ho_sq
 # 1 lm      .16    .04  
 # 2 glmnet  .86    .55  
@@ -172,7 +172,7 @@ table2_tbl = tibble(algorithm = mod_vec,
                     original = original_time,
                     parallelized = parallel_time)
 
-### Outuput from table2_tbl
+### Outuput from table2_tbl for later comparison
 # algorithm original parallelized
 # 1        lm    2.930        2.883
 # 2    glmnet    5.991        1.857
