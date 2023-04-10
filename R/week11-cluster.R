@@ -107,6 +107,10 @@ registerDoSEQ()
 
 
 # Publication
+
+## For my responses, I created a table_comparison.xlsx file to allow 
+## comparison between findings from supercomputer and mylaptop 
+
 ## 1. Which models benefited most from moving to the supercomputer and why?
 ### When looking at the % reduction in training time for parallel vs sequential 
 ### processing, random forest benefited the most moving from local laptop to 
@@ -126,6 +130,9 @@ registerDoSEQ()
 ### increasing the number of cores (from 7 to 14) generally reduced the number 
 ### of seconds needed to train more complex models like random forest and 
 ### XGboost but more time needed to train linear models (OLS & elastic net). 
+### However, when parallelization is not turned on, having more cores is not 
+### that useful as shown in the marked increase in raw training times in supercomputer vs. 
+### my local laptop. 
 
 
 ## 3. If your supervisor asked you to pick a model for use in a production model, would you recommend using the supercomputer and why? Consider all four tables when providing an answer.
@@ -142,19 +149,22 @@ registerDoSEQ()
 ### is used as opposed to a local desktop like mine, the raw training times (in s)
 ### needed did not show great improvement. Take the fastest and slowest training 
 ### models as an example , without parallelization, it took the supercomputer 
-### close to 9s to train OLS and 220s to train XGBoost, but it only took my local 
-### computer about 3s to train OLS and 128s to train XGBoost.
+### close to 9s to train OLS and 221s to train XGBoost, but it only took my local 
+### computer about 3s to train OLS and 129s to train XGBoost.
 ### Indeed, the raw training time in seconds improved slightly for random forest
-### and XGBoost such that training time for random forest decreased from 35s to 33s
-### and that for XGBoost decreased from 28s to 22s. However, this decrease, in my opinion, was quite minimal. 
+### and XGBoost such that training time for random forest decreased from 35s to 32s
+### and that for XGBoost decreased from 28s to 19s. However, this absolute decrease, in my opinion, was quite minimal. 
 ### Taken together, for this given problem, supercomputer doesn't seem to yield much
 ### better performance (there isn't a reason to believe it would anyway!), 
 ### its raw training time is not significantly faster, and the additional steps 
 ### needed to work with shell and allocate the right amount of resources, I 
 ### would not recommend using a supercomputer for this specific problem! But 
-### I think it is important to benchmark training times on my local computer 
+### But I think it is important to benchmark training times on my local computer 
 ### against other local laptops as there may by idiosyncracies across laptops
-### (because they may have different computer powers). 
+### (because they may have different computer powers). Other datasets and other 
+### configurations of tuning parameters may also yield a different conclusion. 
+### Therefore, my judgement is  only based on the present problem and the 
+### performance of my computer in comparison to the supercoputer. 
 
 
 
