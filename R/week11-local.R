@@ -16,7 +16,7 @@ gss_tbl = read_sav("../data/GSS2016.sav") %>%
   mutate(across(everything(), as.numeric)) %>% 
   drop_na(MOSTHRS) %>% 
   rename(workhours = MOSTHRS) %>% 
-  select(-HRS1, HRS2) %>%
+  select(-HRS1, -HRS2) %>%
   select(where(function(x) (sum(is.na(x))/nrow(.)) < 0.75))
 
 mod_vec = c("lm", "glmnet", "ranger", "xgbTree")
@@ -131,8 +131,8 @@ registerDoSEQ()
 #### net (69% reduction). This is likely because [BLAH BLAH BLAH]
 
 ### 2. How big was the difference between the fastest and slowest parallelized model? Why?
-#### The fastest model was glmnet at 1.86s and the slowest model was 
-#### random forest at 32.98s, their difference difference is 31.12s. This is 
+#### The fastest model was glmnet at 1.91s and the slowest model was 
+#### random forest at 34.6, their difference difference is 32.69s This is 
 #### likely because there are more dependency in computations for random forests
 #### compared to elastic net. For elastic net, all models could theoretically be 
 #### trained and predictions can be computed in parallel at the same time. 
@@ -174,22 +174,8 @@ table2_tbl = tibble(algorithm = mod_vec,
 
 ### Outuput from table2_tbl for later comparison
 # algorithm original parallelized
-# 1        lm    2.930        2.883
-# 2    glmnet    5.991        1.857
-# 3    ranger   36.737       32.978
-# 4   xgbTree  128.934       28.810
-
-
-## Q1: Compare run-time across models by calculating percentage change in run time 
-table2_tbl %>% group_by(algorithm) %>% 
-  summarize(reduction = ((parallelized-original)/original) * 100)
-
-### Percentage change in run time 
-# algorithm reduction
-# 1 glmnet       -69.0 
-# 2 lm            -1.60
-# 3 ranger       -10.2 
-# 4 xgbTree      -77.7 
-
-## Q2: Difference between fastest and slowest parallelized model
-diff(range(table2_tbl$parallelized)) # 31.121s between random forest and glmnet
+# <chr>        <dbl>        <dbl>
+#   1 lm            3.28         3.04
+# 2 glmnet        5.95         1.91
+# 3 ranger       37.8         34.6 
+# 4 xgbTree     129.          28.0 
